@@ -2,6 +2,7 @@ import os
 from PIL import Image
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
+from utils.augmentations import apply_random_distortions
 
 
 class SkeletonizationDataset(Dataset):
@@ -26,9 +27,10 @@ class SkeletonizationDataset(Dataset):
         label_path = os.path.join(self.label_dir, self.label_filenames[idx])
 
         image = Image.open(img_path).convert("L")
-        label = Image.open(label_path).convert(
-            "L"
-        )  # assuming label is grayscale (1 channel)
+        label = Image.open(label_path).convert("L")  # assuming label is grayscale (1 channel)
+
+        # Apply distortions only to the input image, NOT to label!
+        image = apply_random_distortions(image)
 
         if self.transform:
             image = self.transform(image)
