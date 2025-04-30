@@ -8,8 +8,11 @@ TRAIN_SCRIPT=src/train.py
 train:
 	$(PYTHON) $(TRAIN_SCRIPT)
 
+infer:
+	$(PYTHON) src/infer.py
+
 clean:
-	rm -f best_model.pth
+	rm -f exported_models/model_*
 
 help:
 	@echo "Makefile options:"
