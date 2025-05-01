@@ -1,0 +1,7 @@
+Timestamp: 20250428_103658
+Architecture: UNet (1 input channel, 1 output class)
+Loss Function: BCEWithLogitsLoss
+Batch Size: 8
+Learning Rate: 0.001
+Epochs: 10
+Final Training Accuracy: 97.30%

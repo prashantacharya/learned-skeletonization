@@ -1,5 +1,7 @@
-*.png
+dataset/*/*.png
 *.geojson
 
 .venv
 __pycache__
+
+*.pth

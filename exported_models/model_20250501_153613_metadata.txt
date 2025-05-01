@@ -1,0 +1,18 @@
+Timestamp: 20250501_153613
+Architecture: UNet (1 input channel, 1 output class)
+Loss Function: BCEWithLogitsLoss
+Batch Size: 16
+Learning Rate: 0.0001
+Epochs: 1
+Final Training Accuracy: 58.12%
+Test Loss: 0.4188
+MSE: 0.5134
+Node 1-Valent Precision: 0.5665
+Node 1-Valent Recall: 0.6957
+Node 2-Valent Precision: 0.9459
+Node 2-Valent Recall: 0.7645
+Node 3-Valent Precision: 0.9449
+Node 3-Valent Recall: 0.7707
+Node 4-Valent Precision: 0.3398
+Node 4-Valent Recall: 0.2857
+Losses: 0.478258291259408
