@@ -12,8 +12,9 @@ from utils.thinning import iterative_thinning
 # --- Config ---
 image_dir = "dataset/image"
 label_dir = "dataset/labels"
-model_path = "exported_models/model_20250428_103658.pth"
-output_dir = "exported_models/inference_results"
+model_version = "model_20250501_181537"
+model_path = f"exported_models/{model_version}.pth"
+output_dir = "exported_models/inference_results_" + model_version
 os.makedirs(output_dir, exist_ok=True)
 
 num_samples = 10
