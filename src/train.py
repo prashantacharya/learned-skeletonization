@@ -12,9 +12,9 @@ from models import UNet
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # 2. Hyperparameters 
-batch_size = 8
-learning_rate = 1e-3
-num_epochs = 10
+batch_size = 16 
+learning_rate = 1e-4
+num_epochs = 20
 loss_function_name = "BCEWithLogitsLoss"
 architecture_name = "UNet (1 input channel, 1 output class)"
 
@@ -27,7 +27,7 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 # 4. Model, Loss, Optimizer
 model = UNet(n_channels=1, n_classes=1).to(device)
 criterion = nn.BCEWithLogitsLoss()
-optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
 
 # Create directory if not exists
 os.makedirs("exported_models", exist_ok=True)
@@ -38,6 +38,8 @@ model_filename = f"exported_models/model_{timestamp}.pth"
 metadata_filename = f"exported_models/model_{timestamp}_metadata.txt"
 
 # 5. Training loop
+loss_history = []  # Array to store loss values for each epoch
+
 for epoch in range(num_epochs):
     model.train()
     epoch_loss = 0
@@ -59,7 +61,9 @@ for epoch in range(num_epochs):
 
         epoch_loss += loss.item()
 
-    print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss/len(train_loader):.4f}")
+    avg_epoch_loss = epoch_loss / len(train_loader)
+    loss_history.append(avg_epoch_loss)  # Store the average loss for this epoch
+    print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {avg_epoch_loss:.4f}")
 
 # 6. Evaluation after training
 def evaluate_accuracy(loader, model):
@@ -89,7 +93,7 @@ print(f"Training Accuracy: {accuracy * 100:.2f}%")
 torch.save(model.state_dict(), model_filename)
 print(f"✅ Model saved to {model_filename}")
 
-# 8. Save metadata
+# 8. Save metadata with loss history
 with open(metadata_filename, "w") as f:
     f.write(f"Timestamp: {timestamp}\n")
     f.write(f"Architecture: {architecture_name}\n")
@@ -98,5 +102,7 @@ with open(metadata_filename, "w") as f:
     f.write(f"Learning Rate: {learning_rate}\n")
     f.write(f"Epochs: {num_epochs}\n")
     f.write(f"Final Training Accuracy: {accuracy * 100:.2f}%\n")
+    f.write(f"Losses: {', '.join(map(str, loss_history))}\n")  # Add losses as a key
+    f.write(f"Optimizer: ", type(optimizer).__name__ + "\n")
 
 print(f"✅ Metadata saved to {metadata_filename}")

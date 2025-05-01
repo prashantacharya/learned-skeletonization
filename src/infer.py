@@ -7,6 +7,7 @@ import torchvision.transforms as transforms
 
 from models import UNet
 from utils.augmentations import apply_random_distortions
+from utils.thinning import iterative_thinning
 
 # --- Config ---
 image_dir = "dataset/image"
@@ -57,6 +58,9 @@ for idx, image_name in enumerate(sample_images, 1):
     ground_truth_np = transform(ground_truth).squeeze().numpy()
     prediction_np = prediction.squeeze().cpu().numpy()
 
+    # Apply iterative thinning to the prediction
+    thinned_prediction_np = iterative_thinning(prediction_np)
+
     # --- 2x2 Plot ---
     fig, axs = plt.subplots(2, 2, figsize=(8, 8))
 
@@ -72,8 +76,8 @@ for idx, image_name in enumerate(sample_images, 1):
     axs[1, 0].set_title("Ground Truth")
     axs[1, 0].axis("off")
 
-    axs[1, 1].imshow(prediction_np, cmap="gray")
-    axs[1, 1].set_title("Predicted Skeleton")
+    axs[1, 1].imshow(thinned_prediction_np, cmap="gray")
+    axs[1, 1].set_title("Thinned Prediction")
     axs[1, 1].axis("off")
 
     plt.tight_layout()
